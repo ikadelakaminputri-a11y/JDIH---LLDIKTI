@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class LatestRegulationsTable extends BaseWidget
 {
-    protected static ?string $heading = 'Regulasi Terbaru';
+    protected static ?string $heading = 'Peraturan Terbaru';
 
     protected int|string|array $columnSpan = 2;
 
