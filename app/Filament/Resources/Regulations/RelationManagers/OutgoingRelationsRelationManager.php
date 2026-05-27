@@ -16,13 +16,14 @@ use Filament\Tables\Table;
 class OutgoingRelationsRelationManager extends RelationManager
 {
     protected static string $relationship = 'outgoingRelations';
+    protected static ?string $title = 'Relasi Peraturan';
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Select::make('target_regulation_id')
-                    ->label('Regulasi Tujuan')
+                    ->label('Peraturan Tujuan')
                     ->options(
                         Regulation::query()
                             ->where('id', '!=', $this->getOwnerRecord()->id)
@@ -48,10 +49,10 @@ class OutgoingRelationsRelationManager extends RelationManager
             ->recordTitleAttribute('id')
             ->columns([
                 TextColumn::make('targetRegulation.number')
-                    ->label('Nomor Regulasi')
+                    ->label('Nomor Peraturan')
                     ->searchable(),
                 TextColumn::make('targetRegulation.title')
-                    ->label('Judul Regulasi')
+                    ->label('Judul Peraturan')
                     ->formatStateUsing(fn($state) => ucwords(strtolower($state)))
                     ->limit(50)
                     ->searchable(),
@@ -71,14 +72,18 @@ class OutgoingRelationsRelationManager extends RelationManager
                         default            => 'gray',
                     }),
             ])
-            ->filters([
-                //
-            ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->label('Tambah Relasi')
+                    ->successNotificationTitle('Relasi berhasil ditambahkan'),
             ])
             ->recordActions([
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->label('Hapus')
+                    ->modalHeading('Hapus Relasi')
+                    ->modalDescription('Apakah anda yakin ingin menghapus relasi ini?')
+                    ->modalSubmitActionLabel('Ya, Hapus')
+                    ->successNotificationTitle('Relasi berhasil dihapus'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

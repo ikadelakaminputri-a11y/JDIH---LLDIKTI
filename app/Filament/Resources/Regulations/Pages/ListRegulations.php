@@ -10,10 +10,21 @@ class ListRegulations extends ListRecords
 {
     protected static string $resource = RegulationResource::class;
 
+    public function getBreadcrumb(): string
+    {
+        return 'Halaman Peraturan';
+    }
+
+    public function getTitle(): string
+    {
+        return 'Daftar Peraturan';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+            ->label('Buat Peraturan'),
         ];
     }
 }

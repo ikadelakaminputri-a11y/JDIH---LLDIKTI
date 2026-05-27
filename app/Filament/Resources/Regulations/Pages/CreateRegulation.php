@@ -10,8 +10,17 @@ use Illuminate\Support\Facades\Storage;
 class CreateRegulation extends CreateRecord
 {
     protected static string $resource = RegulationResource::class;
-
     protected ?string $pdfFilePath = null;
+
+    public function getBreadcrumb(): string
+    {
+        return 'Halaman Tambah Peraturan';
+    }
+
+    public function getTitle(): string
+    {
+        return 'Tambah Peraturan';
+    }
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

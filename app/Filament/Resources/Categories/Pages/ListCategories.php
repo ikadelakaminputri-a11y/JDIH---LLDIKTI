@@ -10,10 +10,21 @@ class ListCategories extends ListRecords
 {
     protected static string $resource = CategoryResource::class;
 
+    public function getBreadcrumb(): string
+    {
+        return 'Halaman Kategori';
+    }
+
+    public function getTitle(): string
+    {
+        return 'Daftar Kategori';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Tambah Kategori'),
         ];
     }
 }

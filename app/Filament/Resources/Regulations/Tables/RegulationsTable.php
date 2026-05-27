@@ -66,7 +66,11 @@ class RegulationsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                TrashedFilter::make(),
+                TrashedFilter::make()
+                ->label('Menampilkan Data Berdasarkan')
+                ->placeholder('Semua Peraturan')
+                ->trueLabel('Semua Peraturan Termasuk yang Dihapus')
+                ->falseLabel('Hanya Peraturan yang Dihapus'),
             ])
             ->recordUrl(null)
             ->recordActions([

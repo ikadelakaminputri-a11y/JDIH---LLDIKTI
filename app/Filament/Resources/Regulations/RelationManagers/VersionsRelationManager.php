@@ -86,9 +86,6 @@ class VersionsRelationManager extends RelationManager
                     ->label('Aktif')
                     ->boolean(),
             ])
-            ->filters([
-                //
-            ])
             ->headerActions([
                 CreateAction::make()
                     ->label('Upload Versi Baru')
@@ -100,9 +97,9 @@ class VersionsRelationManager extends RelationManager
                         $data['download_count'] = 0;
                         $data['is_active']      = true;
                         $data['file_size']      = Storage::disk('public')->size($data['file_path']);
-
                         return $data;
-                    }),
+                    })
+                    ->successNotificationTitle('Versi berhasil diunggah'),
             ])
             ->recordActions([
                 ActionGroup::make([
@@ -113,7 +110,12 @@ class VersionsRelationManager extends RelationManager
                         ->icon('heroicon-o-eye')
                         ->url(fn($record) => asset('storage/' . $record->file_path))
                         ->openUrlInNewTab(),
-                    DeleteAction::make(),
+                    DeleteAction::make()
+                        ->label('Hapus')
+                        ->modalHeading('Hapus Versi')
+                        ->modalDescription('Apakah anda yakin ingin menghapus versi ini?')
+                        ->modalSubmitActionLabel('Ya, Hapus')
+                        ->successNotificationTitle('Versi berhasil dihapus'),
                 ]),
             ])
             ->toolbarActions([

@@ -15,14 +15,16 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class RegulationResource extends Resource
 {
     protected static ?string $model = Regulation::class;
-
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
     protected static ?string $recordTitleAttribute = 'title';
+    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+    protected static ?string $navigationLabel = 'Peraturan';
+    protected static ?string $pluralModelLabel = 'Peraturan';
 
     public static function form(Schema $schema): Schema
     {
