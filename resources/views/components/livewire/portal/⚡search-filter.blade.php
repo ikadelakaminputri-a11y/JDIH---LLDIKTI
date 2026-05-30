@@ -10,7 +10,6 @@ new class extends Component {
     public string $tahun = '';
     public array $daftarKategori = [];
     public array $daftarTahun = [];
-    protected $listeners = [];
 
     public function mount(): void
     {
@@ -20,21 +19,21 @@ new class extends Component {
 
     public function updated(): void
     {
-        $this->dispatch('filter-changed', [
-            'keyword' => $this->keyword,
-            'jenis' => $this->jenis,
-            'tahun' => $this->tahun,
-        ]);
+        $this->dispatchFilter();
     }
 
     public function resetFilter(): void
     {
         $this->reset(['keyword', 'jenis', 'tahun']);
+        $this->dispatchFilter();
+    }
 
+    private function dispatchFilter(): void
+    {
         $this->dispatch('filter-changed', [
-            'keyword' => '',
-            'jenis' => '',
-            'tahun' => '',
+            'keyword' => $this->keyword,
+            'jenis' => $this->jenis,
+            'tahun' => $this->tahun,
         ]);
     }
 };
@@ -48,43 +47,47 @@ new class extends Component {
             <i class="ti ti-search text-gray-400 text-lg shrink-0"></i>
             <input type="text" wire:model.live.debounce.400ms="keyword" placeholder="Cari judul atau nomor peraturan..."
                 class="flex-1 border-none outline-none text-sm text-gray-900 placeholder-gray-400 bg-transparent py-0.5">
+            {{-- Tombol clear keyword --}}
+            @if ($keyword)
+                <button wire:click="$set('keyword', '')" class="text-gray-300 hover:text-gray-500 transition-colors">
+                    <i class="ti ti-x text-sm"></i>
+                </button>
+            @endif
         </div>
+
         {{-- Baris 2: Filter select --}}
         <div class="flex items-center gap-0 px-4 py-3">
-            {{-- Jenis --}}
+
+            {{-- Jenis Kategori --}}
             <div class="flex items-center gap-1.5 flex-1">
                 <i class="ti ti-file-description text-gray-400 text-sm shrink-0"></i>
-                <span class="text-sm text-gray-500 font-medium whitespace-nowrap">
-                    Jenis Kategori:
-                </span>
+                <span class="text-sm text-gray-500 font-medium whitespace-nowrap">Jenis Kategori:</span>
                 <select wire:model.live="jenis"
                     class="flex-1 border-none outline-none text-sm text-gray-700 bg-transparent cursor-pointer min-w-0">
                     <option value="">Semua</option>
                     @foreach ($daftarKategori as $id => $nama)
-                        <option value="{{ $id }}">
-                            {{ $nama }}
-                        </option>
+                        <option value="{{ $id }}">{{ $nama }}</option>
                     @endforeach
                 </select>
             </div>
+
             <div class="w-px h-5 bg-gray-100 shrink-0 mx-2"></div>
+
             {{-- Tahun --}}
             <div class="flex items-center gap-1.5 flex-1">
                 <i class="ti ti-calendar text-gray-400 text-sm shrink-0"></i>
-                <span class="text-sm text-gray-500 font-medium whitespace-nowrap">
-                    Tahun:
-                </span>
+                <span class="text-sm text-gray-500 font-medium whitespace-nowrap">Tahun:</span>
                 <select wire:model.live="tahun"
                     class="flex-1 border-none outline-none text-sm text-gray-700 bg-transparent cursor-pointer min-w-0">
                     <option value="">Semua</option>
                     @foreach ($daftarTahun as $t)
-                        <option value="{{ $t }}">
-                            {{ $t }}
-                        </option>
+                        <option value="{{ $t }}">{{ $t }}</option>
                     @endforeach
                 </select>
             </div>
+
             <div class="w-px h-5 bg-gray-100 shrink-0 mx-2"></div>
+
             {{-- Reset --}}
             <button wire:click="resetFilter"
                 class="flex items-center gap-1.5 text-xs text-gray-500 hover:text-red-500 hover:cursor-pointer transition-colors duration-150">

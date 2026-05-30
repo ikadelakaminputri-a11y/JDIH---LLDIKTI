@@ -7,7 +7,6 @@ use App\Models\Regulation as Peraturan;
 new class extends Component {
     use WithPagination;
 
-    public bool $loading = true;
     public string $keyword = '';
     public string $jenis = '';
     public string $tahun = '';
@@ -26,29 +25,30 @@ new class extends Component {
         $this->topik = $filter['topik'] ?? '';
         $this->totalHasil = $this->queryPeraturan()->count();
         $this->resetPage();
-        $this->loading = false;
+
+        // Beritahu Alpine bahwa proses sudah selesai
+        $this->dispatch('peraturan-loaded');
     }
 
     public function mount(): void
     {
         $this->totalHasil = $this->queryPeraturan()->count();
-        $this->loading = false;
     }
 
     private function queryPeraturan()
     {
         $query = Peraturan::with(['category', 'activeVersion'])->where('status', 'published');
-        // Search keyword
+
         if ($this->keyword) {
             $query->where(function ($q) {
                 $q->where('title', 'like', '%' . $this->keyword . '%')->orWhere('number', 'like', '%' . $this->keyword . '%');
             });
         }
-        // Filter kategori
+
         if ($this->jenis) {
             $query->where('category_id', $this->jenis);
         }
-        // Filter tahun
+
         if ($this->tahun) {
             $query->where('year', $this->tahun);
         }
@@ -63,10 +63,12 @@ new class extends Component {
 };
 ?>
 
-<div class="bg-gray-50 px-6 py-5 border-t border-gray-100 min-h-screen">
+<div class="bg-gray-50 px-6 py-5 border-t border-gray-100 min-h-screen" x-data="{ loading: false }"
+    @filter-changed.window="loading = true" @peraturan-loaded.window="loading = false">
     <div class="max-w-5xl mx-auto">
+
         {{-- Loading skeleton --}}
-        <div wire:loading.block wire:target="terapkanFilter, keyword, jenis, tahun, topik">
+        <div x-show="loading" x-cloak>
             <div class="text-[12px] text-gray-400 mb-3.5">
                 <x-portal.skeleton-bar class="h-3 w-40" />
             </div>
@@ -78,7 +80,8 @@ new class extends Component {
         </div>
 
         {{-- Konten aktual --}}
-        <div wire:loading.remove wire:target="terapkanFilter, keyword, jenis, tahun, topik">
+        <div x-show="!loading">
+
             {{-- Jumlah hasil --}}
             <div class="text-[12px] text-gray-500 mb-3.5">
                 Menampilkan
@@ -98,7 +101,7 @@ new class extends Component {
                 {{-- Daftar card --}}
                 <div class="space-y-2.5 mb-5">
                     @foreach ($this->peraturan as $item)
-                        <a href=""
+                        <a href="{{ route('portal.detail', $item->id) }}"
                             class="block bg-white border border-gray-200 rounded-xl px-4 py-4 hover:border-[#185FA5] transition-colors duration-150 no-underline group"
                             wire:key="peraturan-{{ $item->id }}">
                             <div
@@ -106,7 +109,8 @@ new class extends Component {
                                 {{ $item->title }} Nomor {{ $item->number }}
                             </div>
                             <div class="flex items-center gap-2 mt-2 flex-wrap">
-                                <span class="text-[12px] text-gray-500 capitalize">{{ $item->category->name ?? '-' }}</span>
+                                <span
+                                    class="text-[12px] text-gray-500 capitalize">{{ $item->category->name ?? '-' }}</span>
                                 <span class="w-0.75 h-0.75 rounded-full bg-gray-300"></span>
                                 <span class="text-[12px] text-gray-500">Tahun {{ $item->year }}</span>
                                 <span class="w-0.75 h-0.75 rounded-full bg-gray-300"></span>
@@ -122,6 +126,7 @@ new class extends Component {
                 {{-- Pagination --}}
                 @if ($this->peraturan->hasPages())
                     <div class="flex items-center justify-center gap-1.5">
+
                         {{-- Prev --}}
                         @if ($this->peraturan->onFirstPage())
                             <span
@@ -168,6 +173,7 @@ new class extends Component {
                                 <i class="ti ti-chevron-right"></i>
                             </span>
                         @endif
+
                     </div>
                 @endif
             @endif
