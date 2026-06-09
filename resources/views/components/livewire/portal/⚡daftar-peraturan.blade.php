@@ -81,9 +81,8 @@ new class extends Component {
 
         {{-- Konten aktual --}}
         <div x-show="!loading">
-
             {{-- Jumlah hasil --}}
-            <div class="text-[12px] text-gray-500 mb-3.5">
+            <div class="text-sm text-gray-500 mb-3.5">
                 Menampilkan
                 <strong class="text-gray-800">{{ $this->peraturan->count() }}</strong>
                 dari
@@ -102,10 +101,10 @@ new class extends Component {
                 <div class="space-y-2.5 mb-5">
                     @foreach ($this->peraturan as $item)
                         <a href="{{ route('portal.detail', $item->id) }}"
-                            class="block bg-white border border-gray-200 rounded-xl px-4 py-4 hover:border-[#185FA5] transition-colors duration-150 no-underline group"
+                            class="block bg-white border border-gray-200 rounded-lg px-4 py-4 hover:border-[#185FA5] transition-colors duration-150 no-underline group"
                             wire:key="peraturan-{{ $item->id }}">
                             <div
-                                class="text-[13px] font-medium text-gray-900 leading-snug group-hover:text-[#185FA5] transition-colors duration-150 uppercase">
+                                class="text-[13px] sm:text-lg font-medium text-[#0A2647] leading-snug group-hover:text-[#185FA5] transition-colors duration-150 uppercase">
                                 {{ $item->title }} Nomor {{ $item->number }}
                             </div>
                             <div class="flex items-center gap-2 mt-2 flex-wrap">

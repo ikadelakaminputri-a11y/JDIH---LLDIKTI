@@ -33,7 +33,6 @@ new class extends Component {
         <x-portal.skeleton-stats />
     @else
         <div class="flex justify-center items-stretch gap-0 w-full">
-
             @php
                 $stats = [
                     [
@@ -61,16 +60,14 @@ new class extends Component {
 
             @foreach ($stats as $stat)
                 <div class="flex-1 text-center px-1 sm:px-2 md:px-4 lg:px-6 py-1">
-
                     <div x-data="{
                         current: 0,
                         target: {{ is_numeric($stat['value']) ? $stat['value'] : 0 }},
                         display: 0,
-                    
                         start() {
                     
                             if (this.current > 0) return;
-                    
+
                             let duration = 1500;
                             let stepTime = 16;
                             let totalSteps = duration / stepTime;
@@ -95,19 +92,16 @@ new class extends Component {
                             }, stepTime);
                         }
                     }" x-intersect.once="start()"
-                        class="text-base sm:text-2xl md:text-3xl lg:text-5xl font-medium text-gray-900 leading-tight"
+                        class="text-4xl font-medium text-[#0A2647] leading-tight"
                         x-text="display">
                     </div>
-
                     <div
-                        class="text-[9px] sm:text-xs md:text-sm text-gray-400 mt-1 flex flex-col sm:flex-row items-center justify-center gap-1">
-                        <i class="ti {{ $stat['icon'] }} text-[10px] sm:text-xs md:text-sm"></i>
+                        class="text-xs sm:text-sm text-gray-400 mt-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:ppercase sm:font-medium">
+                        <i class="ti {{ $stat['icon'] }} text-sm sm:text-xs md:text-sm hidden sm:block"></i>
                         <span>{{ $stat['label'] }}</span>
                     </div>
-
                 </div>
             @endforeach
-
         </div>
     @endif
 </div>

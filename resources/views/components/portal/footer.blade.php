@@ -7,8 +7,8 @@
             {{-- Kolom 1: Identitas --}}
             <div>
                 <div class="flex items-center gap-2 mb-3">
-                    <div class="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center shrink-0">
-                        <i class="ti ti-scale text-white text-base"></i>
+                    <div>
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-8 h-8 object-cover">
                     </div>
 
                     <span class="text-sm font-medium text-white">
@@ -32,23 +32,19 @@
                 <div class="text-[12px] font-medium text-white/75 mb-3">
                     Tautan
                 </div>
-
                 <div class="flex flex-col gap-2">
-                    <a href=""
+                    <a href="/"
                         class="text-[12px] text-white/50 hover:text-white/80 transition-colors no-underline">
                         Beranda
                     </a>
-
                     <a href=""
                         class="text-[12px] text-white/50 hover:text-white/80 transition-colors no-underline">
                         Daftar Peraturan
                     </a>
-
                     <a href="#"
                         class="text-[12px] text-white/50 hover:text-white/80 transition-colors no-underline">
                         Tentang JDIH
                     </a>
-
                     <a href="#"
                         class="text-[12px] text-white/50 hover:text-white/80 transition-colors no-underline">
                         Kontak
@@ -90,11 +86,6 @@
                 &copy; {{ date('Y') }} JDIH LLDIKTI Wilayah XI Kalimantan.
                 Hak cipta dilindungi.
             </span>
-
-            <span class="text-[11px] text-white/35">
-                Versi 1.0
-            </span>
-
         </div>
 
     </div>

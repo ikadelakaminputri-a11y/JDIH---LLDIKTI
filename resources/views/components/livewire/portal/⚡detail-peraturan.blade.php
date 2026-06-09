@@ -33,13 +33,36 @@ new class extends Component {
 };
 ?>
 
-<div class="bg-white lg:px-6 pb-5 pt-20">
-    <div class="max-w-5xl mx-auto">
+<div class="bg-gray-50 min-h-screen">
+    {{-- ===== HERO HEADER ===== --}}
+    <div class="relative bg-[#185FA5] h-[20vh] lg:h-[25vh] min-h-37.5 flex items-end overflow-hidden">
+        <div class="absolute inset-0 bg-linear-to-br from-[#0a2d52] via-[#185FA5] to-[#1e7abf]"></div>
+        <div class="absolute inset-0 opacity-10"
+            style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px); background-size: 40px 40px;">
+        </div>
 
-        {{-- Skeleton loading (saat pertama mount) --}}
+        @if (!$loading)
+            <div class="relative z-10 w-full max-w-5xl mx-auto px-4 lg:px-6 pb-6 pt-16">
+                <div class="text-white/60 text-sm mb-1.5 uppercase tracking-widest">
+                    {{ $peraturan->category->name ?? '-' }} Nomor {{ $peraturan->number }}
+                </div>
+                <h1 class="text-white text-xl  font-semibold leading-snug uppercase line-clamp-2">
+                    {{ $peraturan->title }}
+                </h1>
+            </div>
+        @else
+            <div class="relative z-10 w-full max-w-5xl mx-auto px-4 lg:px-6 pb-6 pt-16 space-y-2">
+                <div class="h-3 w-32 bg-white/20 rounded animate-pulse"></div>
+                <div class="h-5 w-3/4 bg-white/20 rounded animate-pulse"></div>
+                <div class="h-5 w-1/2 bg-white/20 rounded animate-pulse"></div>
+            </div>
+        @endif
+    </div>
+
+    {{-- ===== KONTEN UTAMA ===== --}}
+    <div class="max-w-5xl lg:mx-auto lg:px-6 py-5">
         @if ($loading)
             <div class="space-y-4">
-                <x-portal.skeleton-bar class="h-3 w-32" />
                 <div class="bg-white border border-gray-200 rounded-xl p-5 space-y-3">
                     <x-portal.skeleton-bar class="h-3 w-24" />
                     <x-portal.skeleton-bar class="h-5 w-full" />
@@ -61,51 +84,32 @@ new class extends Component {
             </div>
         @else
             {{-- Breadcrumb --}}
-            <nav class="flex flex-wrap items-center gap-1.5 text-[12px] text-gray-400 mb-4 px-6 lg:px-0">
-                <a href="/" class="text-[#185FA5] text-sm hover:underline flex items-center gap-1 no-underline">
-                    <i class="ti ti-home text-sm"></i> Beranda
+            <nav class="flex flex-wrap px-4 items-center gap-1.5 text-gray-400 mb-4">
+                <a href="/" class="text-[#185FA5] text-lg hover:underline flex items-center gap-1 no-underline">
+                    Beranda
                 </a>
                 <i class="ti ti-chevron-right text-sm"></i>
                 <span class="text-gray-600 truncate text-sm max-w-xs">Detail</span>
             </nav>
-
-            {{-- Judul --}}
-            <div class="bg-white border border-gray-200 rounded-sm px-5 py-4 mb-3.5">
-                {{-- FIX: title (bukan judul) --}}
-                <h1 class="text-lg sm:text-xl lg:text-2xl font-medium text-gray-900 leading-snug uppercase mb-1">
-                    {{ $peraturan->title }}
-                </h1>
-                <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <span class="text-sm capitalize">
-                        {{-- FIX: category->name (bukan kategori->nama) --}}
-                        {{ $peraturan->category->name ?? '-' }}
-                    </span>
-                    <span>-</span>
-                    {{-- FIX: number (bukan nomor) --}}
-                    <span>Nomor {{ $peraturan->number }}</span>
-                </div>
-            </div>
-
-            {{-- 2 Kolom: Pratinjau (kiri) + Informasi (kanan) --}}
+            {{-- 2 Kolom --}}
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-3 items-start">
                 {{-- ===== KIRI: PDF VIEWER ===== --}}
                 <div class="order-2 lg:order-1 col-span-1 lg:col-span-3 bg-white border border-gray-200 rounded-sm p-4">
-                    {{-- Header viewer --}}
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                        <div class="lg:text-sm font-medium text-gray-800 flex items-center gap-1.5">
-                            <i class="ti ti-file-type-pdf text-gray-500"></i>
-                            Pratinjau Dokumen
+                        <div class="text-lg font-medium text-gray-800 flex items-center gap-1.5 uppercase">
+                            <i class="ti ti-file-type-pdf text-gray-500 hidden sm:block"></i>
+                            Pratinjau <span class="text-gray-500">Dokumen</span>
                         </div>
                         <div class="flex gap-1.5">
                             <button wire:click="setViewerMode('preview')"
-                                class="px-3 py-1.5 text-[12px] rounded-sm border transition-colors duration-150 hover:cursor-pointer
+                                class="px-3 py-1.5 text-sm rounded-sm border transition-colors duration-150 hover:cursor-pointer
                                     {{ $viewerMode === 'preview'
                                         ? 'bg-[#185FA5] text-white border-[#185FA5]'
                                         : 'border-gray-200 text-gray-500 hover:border-gray-300' }}">
                                 Pratinjau
                             </button>
                             <button wire:click="setViewerMode('fullscreen')"
-                                class="px-3 py-1.5 text-[12px] rounded-sm border transition-colors duration-150 hover:cursor-pointer
+                                class="px-3 py-1.5 text-sm rounded-sm border transition-colors duration-150 hover:cursor-pointer
                                     {{ $viewerMode === 'fullscreen'
                                         ? 'bg-[#185FA5] text-white border-[#185FA5]'
                                         : 'border-gray-200 text-gray-500 hover:border-gray-300' }}">
@@ -115,17 +119,13 @@ new class extends Component {
                     </div>
 
                     @php
-                        // {{-- FIX: activeVersion (bukan dokumenTerbaru) --}}
                         $dokumen = $peraturan->activeVersion;
-                        // {{-- FIX: file_path (bukan path_file), akses via controller bukan asset() langsung --}}
                         $pdfUrl = $dokumen ? route('portal.pdf.view', $peraturan->id) : null;
                     @endphp
 
                     @if ($pdfUrl)
-                        {{-- MODE PRATINJAU --}}
                         @if ($viewerMode === 'preview')
                             <div class="border border-gray-100 rounded-lg overflow-hidden">
-                                {{-- Toolbar navigasi halaman --}}
                                 <div
                                     class="bg-gray-50 border-b border-gray-100 px-3 py-1.5 flex items-center justify-between">
                                     <div class="flex items-center gap-1.5">
@@ -155,8 +155,6 @@ new class extends Component {
                                         </button>
                                     </div>
                                 </div>
-
-                                {{-- Canvas PDF.js --}}
                                 <div class="bg-[#C0C0C0] px-4 py-4 flex justify-center overflow-auto"
                                     style="min-height: 340px;">
                                     <canvas id="pdf-canvas" class="shadow-sm border border-gray-200"></canvas>
@@ -164,14 +162,11 @@ new class extends Component {
                             </div>
                         @endif
 
-                        {{-- MODE LAYAR PENUH --}}
                         @if ($viewerMode === 'fullscreen')
                             <div class="border border-gray-200 rounded-lg overflow-hidden">
-                                {{-- Toolbar dark --}}
                                 <div class="bg-[#1e1e1e] px-3 py-2 flex items-center justify-between">
                                     <div class="flex items-center gap-2">
                                         <i class="ti ti-file-type-pdf text-red-400 text-base"></i>
-                                        {{-- FIX: file_path (bukan path_file) --}}
                                         <span class="text-[12px] text-white/70 truncate max-w-xs">
                                             {{ basename($dokumen->file_path) }}
                                         </span>
@@ -196,8 +191,6 @@ new class extends Component {
                                         </button>
                                     </div>
                                 </div>
-
-                                {{-- Canvas PDF.js fullscreen --}}
                                 <div class="bg-[#555] px-4 py-5 flex justify-center overflow-auto"
                                     style="min-height: 440px;">
                                     <canvas id="pdf-canvas" class="shadow-md"></canvas>
@@ -211,24 +204,22 @@ new class extends Component {
                         </div>
                     @endif
 
-                    {{-- Info file + tombol unduh --}}
                     @if ($dokumen)
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-3 px-3 py-2.5 bg-gray-50 rounded-lg">
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-3 px-3 py-2.5 bg-gray-50 rounded-lg">
                             <div class="flex items-center gap-2.5">
                                 <i class="ti ti-file-type-pdf text-red-500 text-xl"></i>
                                 <div>
-                                    {{-- FIX: basename(file_path) --}}
                                     <div class="text-[12px] font-medium text-gray-800">
                                         {{ basename($dokumen->file_path) }}
                                     </div>
-                                    {{-- FIX: file_size_formatted (accessor dari model) --}}
                                     <div class="text-[11px] text-gray-400">
                                         {{ $dokumen->file_size_formatted }}
                                     </div>
                                 </div>
                             </div>
                             <button wire:click="unduh" wire:loading.attr="disabled" wire:target="unduh"
-                                class="flex items-center gap-1.5 bg-[#185FA5] hover:bg-[#0f4a8a] text-white text-[12px] font-medium px-4 py-2 rounded-sm transition-colors duration-150 disabled:opacity-60">
+                                class="flex items-center gap-1.5 bg-[#185FA5] hover:bg-[#0f4a8a] text-white text-sm font-medium px-4 py-2 rounded-sm transition-colors duration-150 disabled:opacity-60">
                                 <span wire:loading.remove wire:target="unduh">
                                     <i class="ti ti-download"></i> Unduh PDF
                                 </span>
@@ -238,16 +229,16 @@ new class extends Component {
                             </button>
                         </div>
                     @endif
-
                 </div>
 
-                {{-- ===== KANAN: INFORMASI DOKUMEN ===== --}}
+                {{-- ===== KANAN: INFORMASI + STATUS ===== --}}
                 <div class="order-1 lg:order-2 col-span-1 lg:col-span-2 space-y-3">
-                    {{-- Panel informasi --}}
+
+                    {{-- Informasi Dokumen --}}
                     <div class="bg-white border border-gray-200 rounded-sm p-4">
-                        <div class="text-sm font-medium text-gray-800 mb-3.5 flex items-center gap-1.5">
-                            <i class="ti ti-info-circle text-gray-400"></i>
-                            Informasi Dokumen
+                        <div class="text-lg font-medium text-gray-800 mb-3.5 flex items-center gap-1.5 uppercase border-b border-gray-300 pb-4">
+                            <i class="ti ti-info-circle text-[#0A2647] hidden sm:block"></i>
+                            Informasi <span class="text-gray-500">Peraturan</span>
                         </div>
 
                         @php
@@ -255,31 +246,22 @@ new class extends Component {
                                 [
                                     'icon' => 'ti-file-text',
                                     'label' => 'Jenis Dokumen',
-                                    // {{-- FIX: category->name --}}
                                     'value' => $peraturan->category->name ?? '-',
                                 ],
-                                [
-                                    'icon' => 'ti-hash',
-                                    'label' => 'Nomor',
-                                    // {{-- FIX: number --}}
-                                    'value' => $peraturan->number,
-                                ],
+                                ['icon' => 'ti-hash', 'label' => 'Nomor', 'value' => $peraturan->number],
                                 [
                                     'icon' => 'ti-calendar',
                                     'label' => 'Tanggal Terbit',
-                                    // {{-- FIX: publish_date (bukan tanggal_terbit) --}}
                                     'value' => $peraturan->publish_date->translatedFormat('d F Y'),
                                 ],
                                 [
                                     'icon' => 'ti-download',
                                     'label' => 'Total Unduhan',
-                                    // {{-- FIX: dari activeVersion->download_count, bukan peraturan->jumlah_unduhan --}}
                                     'value' => number_format($peraturan->activeVersion?->download_count ?? 0) . ' kali',
                                 ],
                                 [
                                     'icon' => 'ti-circle-check',
                                     'label' => 'Status',
-                                    // {{-- FIX: dari enum status, bukan status_label --}}
                                     'value' => $peraturan->status === 'published' ? 'Aktif' : 'Tidak Aktif',
                                 ],
                             ];
@@ -288,26 +270,18 @@ new class extends Component {
                         <div class="divide-y divide-gray-100">
                             @foreach ($metaItems as $item)
                                 <div class="flex items-start gap-2.5 py-2.5">
-                                    <i class="ti {{ $item['icon'] }} text-gray-400 text-base mt-0.5 shrink-0"></i>
+                                    <i class="ti {{ $item['icon'] }} text-gray-400 text-xl mt-0.5 shrink-0 hidden sm:block"></i>
                                     <div>
-                                        <div class="text-[11px] text-gray-400">{{ $item['label'] }}</div>
-                                        <div class="text-[13px] font-medium text-gray-900 mt-0.5">{{ $item['value'] }}
+                                        <div class="text-sm text-gray-400 font-medium">{{ $item['label'] }}</div>
+                                        <div class="text-sm  text-[#0A2647] mt-0.5">{{ $item['value'] }}
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-
-                        {{-- Badge resmi --}}
-                        <div class="mt-3.5 px-3 py-2.5 bg-gray-50 rounded-lg flex items-center gap-2">
-                            <i class="ti ti-shield-check text-[#185FA5] text-lg shrink-0"></i>
-                            <p class="text-[11px] text-gray-500 leading-relaxed">
-                                Dokumen resmi diterbitkan oleh LLDIKTI Wilayah XI Kalimantan
-                            </p>
-                        </div>
                     </div>
 
-                    {{-- ===== RELASI ANTAR REGULASI ===== --}}
+                    {{-- Status Peraturan --}}
                     @php
                         $outgoing = $peraturan->outgoingRelations;
                         $incoming = $peraturan->incomingRelations;
@@ -315,54 +289,79 @@ new class extends Component {
                     @endphp
 
                     @if ($adaRelasi)
-                        <div class="bg-white border border-gray-200 rounded-xl p-4">
-                            <div class="text-[13px] font-medium text-gray-800 mb-3.5 flex items-center gap-1.5">
-                                <i class="ti ti-arrows-exchange text-gray-400"></i>
-                                Relasi Regulasi
+                        <div class="bg-white border border-gray-200 rounded-sm p-4">
+                            <div class="text-lg uppercase font-medium text-gray-800 mb-3.5 flex items-center gap-1.5 border-b border-gray-300 pb-4">
+                                <i class="ti ti-git-branch text-gray-400 hidden sm:block"></i>
+                                Status <span class="text-gray-500">Peraturan</span>
                             </div>
 
-                            <div class="space-y-2">
-                                {{-- Outgoing: A mengubah/mencabut B --}}
-                                @foreach ($outgoing as $relasi)
-                                    <div class="flex items-start gap-2.5 py-2 border-b border-gray-50 last:border-0">
-                                        <span
-                                            class="mt-0.5 shrink-0 text-[11px] font-medium px-1.5 py-0.5 rounded
-                                            {{ $relasi->relation_type === 'mencabut' ? 'bg-red-50 text-red-600' : 'bg-yellow-50 text-yellow-700' }}">
-                                            {{ $relasi->label_from_source }}
-                                        </span>
-                                        <a href="{{ route('portal.detail', $relasi->targetRegulation->id) }}"
-                                            class="text-[12px] text-[#185FA5] hover:underline leading-snug">
-                                            {{ $relasi->targetRegulation->title }} No.
-                                            {{ $relasi->targetRegulation->number }}
-                                        </a>
+                            <div class="space-y-3">
+                                @foreach ($outgoing->groupBy('relation_type') as $type => $items)
+                                    <div>
+                                        <div class="bg-[#F1F4FF] px-3 py-2 text-sm font-medium text-gray-700 mb-2">
+                                            {{ match ($type) {
+                                                'mengubah' => 'Mengubah :',
+                                                'mencabut' => 'Mencabut :',
+                                                'dicabut_sebagian' => 'Mencabut sebagian :',
+                                                default => $type . ' :',
+                                            } }}
+                                        </div>
+                                        <div class="px-3 space-y-2.5">
+                                            @foreach ($items as $relasi)
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-sm text-gray-500 shrink-0 mt-0.5">
+                                                        {{ chr(96 + $loop->index + 1) }}.
+                                                    </span>
+                                                    <div class="text-sm leading-snug">
+                                                        <a href="{{ route('portal.detail', $relasi->targetRegulation->id) }}"
+                                                            class="hover:underline capitalize text-red-400">
+                                                            {{ $relasi->targetRegulation->title }}
+                                                            No. {{ $relasi->targetRegulation->number }} Tahun
+                                                            {{ $relasi->targetRegulation->year }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 @endforeach
 
-                                {{-- Incoming: A diubah/dicabut oleh B --}}
-                                @foreach ($incoming as $relasi)
-                                    <div class="flex items-start gap-2.5 py-2 border-b border-gray-50 last:border-0">
-                                        <span
-                                            class="mt-0.5 shrink-0 text-[11px] font-medium px-1.5 py-0.5 rounded
-                                            {{ $relasi->relation_type === 'mencabut' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600' }}">
-                                            {{ $relasi->label_from_target }}
-                                        </span>
-                                        <a href="{{ route('portal.detail', $relasi->sourceRegulation->id) }}"
-                                            class="text-[12px] text-[#185FA5] hover:underline leading-snug">
-                                            {{ $relasi->sourceRegulation->title }} No.
-                                            {{ $relasi->sourceRegulation->number }}
-                                        </a>
+                                @foreach ($incoming->groupBy('relation_type') as $type => $items)
+                                    <div>
+                                        <div class="bg-[#F1F4FF] px-3 py-2 text-sm font-medium text-gray-700 mb-2">
+                                            {{ match ($type) {
+                                                'mengubah' => 'Diubah dengan :',
+                                                'mencabut' => 'Dicabut oleh :',
+                                                'dicabut_sebagian' => 'Dicabut sebagian oleh :',
+                                                default => $type . ' :',
+                                            } }}
+                                        </div>
+                                        <div class="px-3 space-y-2.5">
+                                            @foreach ($items as $relasi)
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-sm text-gray-500 shrink-0 mt-0.5">
+                                                        {{ chr(96 + $loop->index + 1) }}.
+                                                    </span>
+                                                    <div class="text-sm leading-snug">
+                                                        <a href="{{ route('portal.detail', $relasi->sourceRegulation->id) }}"
+                                                            style="color: #dc2626;"
+                                                            class="hover:underline font-medium">
+                                                            {{ $relasi->sourceRegulation->title }}
+                                                            Nomor {{ $relasi->sourceRegulation->number }} Tahun
+                                                            {{ $relasi->sourceRegulation->year }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
                         </div>
                     @endif
-
                 </div>
-                {{-- /KANAN --}}
-
             </div>
         @endif
-
     </div>
 </div>
 
@@ -373,7 +372,7 @@ new class extends Component {
 
         let pdfDoc = null;
         let pageNum = 1;
-        let scale = 1.2;
+        let scale = 1;
         const pdfUrl = @json($pdfUrl);
 
         function renderPage(num) {
@@ -431,12 +430,10 @@ new class extends Component {
             renderPage(pageNum);
         });
 
-        // Re-render canvas setelah Livewire update (mode switch)
         Livewire.hook('morph.updated', () => {
             if (pdfDoc) renderPage(pageNum);
         });
 
-        // Trigger unduh file
         Livewire.on('mulai-unduh', ({
             url
         }) => {
