@@ -14,7 +14,6 @@ new class extends Component {
             ->where('id', $id)
             ->where('status', 'published')
             ->firstOrFail();
-
         $this->loading = false;
     }
 
@@ -26,7 +25,6 @@ new class extends Component {
     public function unduh(): void
     {
         $dokumen = $this->peraturan->activeVersion;
-
         if ($dokumen) {
             $dokumen->incrementDownload();
             $this->dispatch('mulai-unduh', url: route('portal.download', $this->peraturan->id));
@@ -35,7 +33,7 @@ new class extends Component {
 };
 ?>
 
-<div class="bg-white px-6 pb-5 pt-20">
+<div class="bg-white lg:px-6 pb-5 pt-20">
     <div class="max-w-5xl mx-auto">
 
         {{-- Skeleton loading (saat pertama mount) --}}
@@ -63,7 +61,7 @@ new class extends Component {
             </div>
         @else
             {{-- Breadcrumb --}}
-            <nav class="flex items-center gap-1.5 text-[12px] text-gray-400 mb-4">
+            <nav class="flex flex-wrap items-center gap-1.5 text-[12px] text-gray-400 mb-4 px-6 lg:px-0">
                 <a href="/" class="text-[#185FA5] text-sm hover:underline flex items-center gap-1 no-underline">
                     <i class="ti ti-home text-sm"></i> Beranda
                 </a>
@@ -74,7 +72,7 @@ new class extends Component {
             {{-- Judul --}}
             <div class="bg-white border border-gray-200 rounded-sm px-5 py-4 mb-3.5">
                 {{-- FIX: title (bukan judul) --}}
-                <h1 class="lg:text-2xl font-medium text-gray-900 leading-snug uppercase mb-1">
+                <h1 class="text-lg sm:text-xl lg:text-2xl font-medium text-gray-900 leading-snug uppercase mb-1">
                     {{ $peraturan->title }}
                 </h1>
                 <div class="flex items-center gap-2 text-sm text-gray-500">
@@ -89,11 +87,11 @@ new class extends Component {
             </div>
 
             {{-- 2 Kolom: Pratinjau (kiri) + Informasi (kanan) --}}
-            <div class="grid grid-cols-5 gap-3 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-3 items-start">
                 {{-- ===== KIRI: PDF VIEWER ===== --}}
-                <div class="col-span-3 bg-white border border-gray-200 rounded-sm p-4">
+                <div class="order-2 lg:order-1 col-span-1 lg:col-span-3 bg-white border border-gray-200 rounded-sm p-4">
                     {{-- Header viewer --}}
-                    <div class="flex items-center justify-between mb-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                         <div class="lg:text-sm font-medium text-gray-800 flex items-center gap-1.5">
                             <i class="ti ti-file-type-pdf text-gray-500"></i>
                             Pratinjau Dokumen
@@ -150,7 +148,7 @@ new class extends Component {
                                             <i class="ti ti-zoom-out"></i>
                                         </button>
                                         <span id="zoom-level"
-                                            class="text-[11px] text-gray-500 min-w-[36px] text-center">100%</span>
+                                            class="text-[11px] text-gray-500 min-w-9 text-center">100%</span>
                                         <button onclick="zoomIn()"
                                             class="px-2 py-1 border border-gray-200 rounded-md text-[11px] text-gray-500 hover:border-gray-300 transition-colors">
                                             <i class="ti ti-zoom-in"></i>
@@ -215,7 +213,7 @@ new class extends Component {
 
                     {{-- Info file + tombol unduh --}}
                     @if ($dokumen)
-                        <div class="flex items-center justify-between mt-3 px-3 py-2.5 bg-gray-50 rounded-lg">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-3 px-3 py-2.5 bg-gray-50 rounded-lg">
                             <div class="flex items-center gap-2.5">
                                 <i class="ti ti-file-type-pdf text-red-500 text-xl"></i>
                                 <div>
@@ -244,7 +242,7 @@ new class extends Component {
                 </div>
 
                 {{-- ===== KANAN: INFORMASI DOKUMEN ===== --}}
-                <div class="col-span-2 space-y-3">
+                <div class="order-1 lg:order-2 col-span-1 lg:col-span-2 space-y-3">
                     {{-- Panel informasi --}}
                     <div class="bg-white border border-gray-200 rounded-sm p-4">
                         <div class="text-sm font-medium text-gray-800 mb-3.5 flex items-center gap-1.5">
@@ -290,7 +288,7 @@ new class extends Component {
                         <div class="divide-y divide-gray-100">
                             @foreach ($metaItems as $item)
                                 <div class="flex items-start gap-2.5 py-2.5">
-                                    <i class="ti {{ $item['icon'] }} text-gray-400 text-base mt-0.5 flex-shrink-0"></i>
+                                    <i class="ti {{ $item['icon'] }} text-gray-400 text-base mt-0.5 shrink-0"></i>
                                     <div>
                                         <div class="text-[11px] text-gray-400">{{ $item['label'] }}</div>
                                         <div class="text-[13px] font-medium text-gray-900 mt-0.5">{{ $item['value'] }}
@@ -302,7 +300,7 @@ new class extends Component {
 
                         {{-- Badge resmi --}}
                         <div class="mt-3.5 px-3 py-2.5 bg-gray-50 rounded-lg flex items-center gap-2">
-                            <i class="ti ti-shield-check text-[#185FA5] text-lg flex-shrink-0"></i>
+                            <i class="ti ti-shield-check text-[#185FA5] text-lg shrink-0"></i>
                             <p class="text-[11px] text-gray-500 leading-relaxed">
                                 Dokumen resmi diterbitkan oleh LLDIKTI Wilayah XI Kalimantan
                             </p>
