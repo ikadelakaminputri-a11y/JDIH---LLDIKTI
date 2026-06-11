@@ -3,6 +3,7 @@
 use Livewire\Component;
 use App\Models\Regulation as Peraturan;
 use App\Models\Category as Kategori;
+use App\Models\RegulationVersion;
 
 new class extends Component {
     public bool $loading = true;
@@ -21,7 +22,7 @@ new class extends Component {
         $this->totalPeraturan = Peraturan::where('status', 'published')->count();
         $this->tahunTerbaru = (int) (Peraturan::where('status', 'published')->max('year') ?? 0);
         $this->totalKategori = Kategori::count();
-        $this->totalUnduhan = Peraturan::where('status', 'published')->sum('jumlah_unduhan');
+        $this->totalUnduhan = RegulationVersion::sum('download_count');
 
         $this->loading = false;
     }
@@ -62,12 +63,25 @@ new class extends Component {
                 <div class="flex-1 text-center px-1 sm:px-2 md:px-4 lg:px-6 py-1">
                     <div x-data="{
                         current: 0,
-                        target: {{ is_numeric($stat['value']) ? $stat['value'] : 0 }},
+                        target: {{ is_numeric(str_replace(',', '', $stat['value'])) ? str_replace(',', '', $stat['value']) : 0 }},
                         display: 0,
+                    
+                        formatNumber(value) {
+                            if (value >= 1000000) {
+                                return (value / 1000000).toFixed(1).replace('.0', '') + 'M';
+                            }
+                    
+                            if (value >= 1000) {
+                                return (value / 1000).toFixed(1).replace('.0', '') + 'K';
+                            }
+                    
+                            return value.toLocaleString();
+                        },
+                    
                         start() {
                     
                             if (this.current > 0) return;
-
+                    
                             let duration = 1500;
                             let stepTime = 16;
                             let totalSteps = duration / stepTime;
@@ -84,16 +98,16 @@ new class extends Component {
                     
                                 let value = Math.floor(this.current);
                     
-                                this.display =
-                                    '{{ $stat['label'] }}' === 'Tahun Terbaru' ?
-                                    value :
-                                    value.toLocaleString();
+                                if ('{{ $stat['label'] }}' === 'Tahun Terbaru') {
+                                    this.display = value;
+                                } else {
+                                    this.display = this.formatNumber(value);
+                                }
                     
                             }, stepTime);
                         }
                     }" x-intersect.once="start()"
-                        class="text-4xl font-medium text-[#0A2647] leading-tight"
-                        x-text="display">
+                        class="text-4xl font-medium text-[#0A2647] leading-tight" x-text="display">
                     </div>
                     <div
                         class="text-xs sm:text-sm text-gray-400 mt-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:ppercase sm:font-medium">

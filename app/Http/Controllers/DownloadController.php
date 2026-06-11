@@ -37,7 +37,7 @@ class DownloadController extends Controller
      * Download count sudah di-increment oleh Livewire method unduh(),
      * sehingga controller ini TIDAK perlu increment lagi.
      */
-    public function unduh(int $id): BinaryFileResponse
+    public function unduh(int $id)
     {
         $peraturan = Regulation::with('activeVersion')
             ->where('id', $id)

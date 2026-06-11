@@ -40,10 +40,6 @@ class RegulationsTable
                     ->formatStateUsing(fn($state) => ucwords(strtolower($state)))
                     ->limit(15)
                     ->searchable(),
-                TextColumn::make('publish_date')
-                    ->label('Tanggal Terbit')
-                    ->date('d M Y')
-                    ->sortable(),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
@@ -69,10 +65,10 @@ class RegulationsTable
             ->emptyStateIcon('heroicon-o-document-text')
             ->filters([
                 TrashedFilter::make()
-                ->label('Menampilkan Data Berdasarkan')
-                ->placeholder('Semua Peraturan')
-                ->trueLabel('Semua Peraturan Termasuk yang Dihapus')
-                ->falseLabel('Hanya Peraturan yang Dihapus'),
+                    ->label('Menampilkan Data Berdasarkan')
+                    ->placeholder('Semua Peraturan')
+                    ->trueLabel('Semua Peraturan Termasuk yang Dihapus')
+                    ->falseLabel('Hanya Peraturan yang Dihapus'),
             ])
             ->recordUrl(null)
             ->recordActions([
@@ -164,38 +160,131 @@ class RegulationsTable
                                         ->schema([
                                             TextEntry::make('outgoing_display')
                                                 ->label('Peraturan Ini')
+                                                ->html()
                                                 ->state(function ($record): string {
                                                     $record->loadMissing('outgoingRelations.targetRegulation');
+
                                                     if ($record->outgoingRelations->isEmpty()) {
-                                                        return '—';
+                                                        return '<div style="color:#9ca3af;font-size:0.875rem;font-style:italic;padding:8px 0;">Tidak ada relasi</div>';
                                                     }
-                                                    return $record->outgoingRelations->map(function ($rel) {
-                                                        $label = match ($rel->relation_type) {
-                                                            'mengubah'         => 'Mengubah',
-                                                            'mencabut'         => 'Mencabut',
-                                                            'dicabut_sebagian' => 'Mencabut Sebagian',
-                                                            default            => $rel->relation_type,
-                                                        };
-                                                        return "• {$label}: {$rel->targetRegulation->number} — {$rel->targetRegulation->title}";
-                                                    })->implode("\n");
+
+                                                    // Kelompokkan per tipe relasi
+                                                    $grouped = $record->outgoingRelations->groupBy('relation_type');
+
+                                                    $labelMap = [
+                                                        'mengubah'         => 'Mengubah :',
+                                                        'mencabut'         => 'Mencabut :',
+                                                        'dicabut_sebagian' => 'Mencabut Sebagian :',
+                                                    ];
+
+                                                    $output = '';
+
+                                                    foreach ($grouped as $type => $relations) {
+                                                        $sectionLabel = $labelMap[$type] ?? ucfirst($type) . ' :';
+                                                        // Header abu-abu 
+                                                        $output .= <<<HTML
+                                                            <div style="margin-bottom:20px;">
+                                                                <div style="
+                                                                    background:#f1f5f9;
+                                                                    border-radius:6px;
+                                                                    padding:9px 14px;
+                                                                    margin-bottom:10px;
+                                                                ">
+                                                                    <span style="font-size:0.85rem;font-weight:600;color:#334155;">{$sectionLabel}</span>
+                                                                </div>
+                                                                <ol style="margin:0;padding-left:0;list-style:none;">
+                                                            HTML;
+
+                                                        foreach ($relations as $i => $rel) {
+                                                            $letter = chr(97 + $i); // a, b, c, ...
+                                                            $number = e($rel->targetRegulation->number);
+                                                            $title  = e(ucwords(strtolower($rel->targetRegulation->title)));
+                                                            $year   = e($rel->targetRegulation->year ?? '');
+
+                                                            $output .= <<<HTML
+                                                            <li style="
+                                                                display:flex;
+                                                                gap:10px;
+                                                                padding:6px 14px 10px 14px;
+                                                                font-size:0.85rem;
+                                                                line-height:1.55;
+                                                                color:#374151;
+                                                            ">
+                                                                <span style="flex-shrink:0;color:#374151;font-weight:500;">{$letter}.</span>
+                                                                <span>
+                                                                    <span style="color:#374151;"> {$title} Nomor {$number}</span>
+                                                                </span>
+                                                            </li>
+                                                            HTML;
+                                                        }
+                                                        $output .= '</ol></div>';
+                                                    }
+
+                                                    return $output;
                                                 }),
+
                                             TextEntry::make('incoming_display')
                                                 ->label('Peraturan Lain Terhadap Ini')
+                                                ->html()
                                                 ->state(function ($record): string {
                                                     $record->loadMissing('incomingRelations.sourceRegulation');
-                                                    if ($record->incomingRelations->isEmpty()) {
-                                                        return '—';
-                                                    }
-                                                    return $record->incomingRelations->map(function ($rel) {
-                                                        $label = match ($rel->relation_type) {
-                                                            'mengubah'         => 'Diubah dengan',
-                                                            'mencabut'         => 'Dicabut oleh',
-                                                            'dicabut_sebagian' => 'Dicabut Sebagian oleh',
-                                                            default            => $rel->relation_type,
-                                                        };
 
-                                                        return "• {$label}: {$rel->sourceRegulation->number} — {$rel->sourceRegulation->title}";
-                                                    })->implode("\n");
+                                                    if ($record->incomingRelations->isEmpty()) {
+                                                        return '<div style="color:#9ca3af;font-size:0.875rem;font-style:italic;padding:8px 0;">Tidak ada relasi</div>';
+                                                    }
+
+                                                    $grouped = $record->incomingRelations->groupBy('relation_type');
+
+                                                    $labelMap = [
+                                                        'mengubah'         => 'Diubah dengan :',
+                                                        'mencabut'         => 'Dicabut oleh :',
+                                                        'dicabut_sebagian' => 'Dicabut Sebagian oleh :',
+                                                    ];
+
+                                                    $output = '';
+
+                                                    foreach ($grouped as $type => $relations) {
+                                                        $sectionLabel = $labelMap[$type] ?? ucfirst($type) . ' :';
+
+                                                        $output .= <<<HTML
+                                                            <div style="margin-bottom:20px;">
+                                                                <div style="
+                                                                    background:#f1f5f9;
+                                                                    border-radius:6px;
+                                                                    padding:9px 14px;
+                                                                    margin-bottom:10px;
+                                                                ">
+                                                                    <span style="font-size:0.85rem;font-weight:600;color:#334155;">{$sectionLabel}</span>
+                                                                </div>
+                                                                <ol style="margin:0;padding-left:0;list-style:none;">
+                                                            HTML;
+
+                                                        foreach ($relations as $i => $rel) {
+                                                            $letter = chr(97 + $i);
+                                                            $number = e($rel->sourceRegulation->number);
+                                                            $title  = e(ucwords(strtolower($rel->sourceRegulation->title)));
+
+                                                            $output .= <<<HTML
+                                                                <li style="
+                                                                    display:flex;
+                                                                    gap:10px;
+                                                                    padding:6px 14px 10px 14px;
+                                                                    font-size:0.85rem;
+                                                                    line-height:1.55;
+                                                                    color:#374151;
+                                                                ">
+                                                                    <span style="flex-shrink:0;color:#374151;font-weight:500;">{$letter}.</span>
+                                                                    <span>
+                                                                        <span style="color:#374151;"> {$title} Nomor {$number}</span>
+                                                                    </span>
+                                                                </li>
+                                                                HTML;
+                                                        }
+
+                                                        $output .= '</ol></div>';
+                                                    }
+
+                                                    return $output;
                                                 }),
                                         ]),
                                 ])

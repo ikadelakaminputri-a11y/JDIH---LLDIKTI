@@ -36,7 +36,7 @@ new class extends Component {
 
 <div class="bg-gray-50 min-h-screen">
     {{-- ===== HERO HEADER ===== --}}
-    <div class="relative bg-[#185FA5] h-[20vh] lg:h-[25vh] min-h-43 flex items-end overflow-hidden">
+    <div class="relative bg-[#185FA5] h-[20vh] min-h-38 flex items-end overflow-hidden">
         <div class="absolute inset-0 bg-linear-to-br from-[#0a2d52] via-[#185FA5] to-[#1e7abf]"></div>
         <div class="absolute inset-0 opacity-10"
             style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px); background-size: 40px 40px;">
@@ -437,19 +437,16 @@ new class extends Component {
             renderPage(pageNum);
         });
 
-        Livewire.hook('morph.updated', () => {
-            if (pdfDoc) renderPage(pageNum);
-        });
+        document.addEventListener('livewire:init', () => {
 
-        Livewire.on('mulai-unduh', ({
-            url
-        }) => {
-            const a = document.createElement('a');
-            a.href = url;
-            a.setAttribute('download', '');
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            Livewire.hook('morph.updated', () => {
+                if (pdfDoc) renderPage(pageNum);
+            });
+
+            Livewire.on('mulai-unduh', (event) => {
+                window.location.href = event.url;
+            });
+
         });
     </script>
 @endif

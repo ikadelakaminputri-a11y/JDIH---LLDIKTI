@@ -72,6 +72,9 @@ class OutgoingRelationsRelationManager extends RelationManager
                         default            => 'gray',
                     }),
             ])
+            ->emptyStateHeading('Belum ada relasi peraturan')
+            ->emptyStateDescription('Tambahkan relasi peraturan untuk melihat daftar hubungan antar peraturan.')
+            ->emptyStateIcon('heroicon-o-link')
             ->headerActions([
                 CreateAction::make()
                     ->label('Tambah Relasi')
