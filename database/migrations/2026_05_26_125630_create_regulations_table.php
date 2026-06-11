@@ -18,8 +18,8 @@ return new class extends Migration
                 ->restrictOnDelete();
             $table->string('title', 500);
             $table->string('number', 100);
+            $table->string('slug', 255)->unique();
             $table->smallInteger('year')->unsigned()->index();
-            $table->date('publish_date');
             $table->enum('status', ['published', 'unpublished'])->default('unpublished');
             $table->timestamps();
             $table->softDeletes(); // deleted_at

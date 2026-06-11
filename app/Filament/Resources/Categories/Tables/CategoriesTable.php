@@ -32,6 +32,8 @@ class CategoriesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->emptyStateHeading('Belum ada kategori yang ditambahkan')
+            ->emptyStateIcon('heroicon-o-document-text')
             ->filters([
                 //
             ])

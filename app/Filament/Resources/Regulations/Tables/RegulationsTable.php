@@ -65,6 +65,8 @@ class RegulationsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->emptyStateHeading('Belum ada peraturan')
+            ->emptyStateIcon('heroicon-o-document-text')
             ->filters([
                 TrashedFilter::make()
                 ->label('Menampilkan Data Berdasarkan')

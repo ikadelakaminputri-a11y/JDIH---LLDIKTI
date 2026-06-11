@@ -69,6 +69,9 @@ class LatestRegulationsTable extends BaseWidget
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Ditambahkan')
                     ->since(),
-            ]);
+            ])
+            ->emptyStateHeading('Belum ada peraturan terbaru')
+            ->emptyStateDescription('Peraturan yang baru ditambahkan akan muncul di sini.')
+            ->emptyStateIcon('heroicon-o-document-text');
     }
 }

@@ -18,8 +18,9 @@ Route::prefix('portal')->name('portal.')->group(function () {
         return view('portal.index');
     })->name('index');
     // Halaman detail peraturan
-    Route::get('/peraturan/{id}', function (int $id) {
-        return view('portal.detail', ['id' => $id]);
+    Route::get('/peraturan/{slug}', function (string $slug) {
+        // Logic to find peraturan by slug
+        return view('portal.detail', ['slug' => $slug]);
     })->name('detail');
     // Serve PDF untuk pratinjau di browser (PDF.js) — TIDAK increment download_count
     Route::get('/peraturan/{id}/pdf', [DownloadController::class, 'view'])

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Regulation extends Model
 {
@@ -19,15 +20,47 @@ class Regulation extends Model
         'category_id',
         'title',
         'number',
+        'slug',
         'year',
-        'publish_date',
         'status',
     ];
-
     protected $casts = [
-        'publish_date' => 'date',
         'year'         => 'integer',
     ];
+
+    // ── Boot ────────────────────────────────────────────────
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($regulation) {
+            $regulation->slug = self::generateUniqueSlug($regulation->title);
+        });
+
+        static::updating(function ($regulation) {
+            if ($regulation->isDirty('title')) {
+                $regulation->slug = self::generateUniqueSlug($regulation->title, $regulation->id);
+            }
+        });
+    }
+
+    private static function generateUniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($title);
+        $slug = $base;
+        $counter = 1;
+
+        while (
+            self::where('slug', $slug)
+            ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+            ->exists()
+        ) {
+            $slug = $base . '-' . $counter++;
+        }
+
+        return $slug;
+    }
 
     // ── Relasi ──────────────────────────────────────────────
 

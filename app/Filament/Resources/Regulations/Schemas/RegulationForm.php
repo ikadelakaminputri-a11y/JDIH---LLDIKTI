@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Regulations\Schemas;
 
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class RegulationForm
 {
@@ -20,7 +20,13 @@ class RegulationForm
                     ->required(),
                 TextInput::make('title')
                     ->label('Judul')
-                    ->required(),
+                    ->required()
+                    ->live(onBlur: true)                          // ← trigger saat blur
+                    ->afterStateUpdated(function (string $operation, $state, callable $set) {
+                        if ($operation === 'create') {
+                            $set('slug', Str::slug($state));      // ← auto-fill slug
+                        }
+                    }),
                 TextInput::make('number')
                     ->label('Nomor')
                     ->required(),
@@ -28,9 +34,7 @@ class RegulationForm
                     ->label('Tahun')
                     ->required()
                     ->numeric(),
-                DatePicker::make('publish_date')
-                    ->label('Tanggal Terbit')
-                    ->required(),
+                // DatePicker::make('publish_date') ← hapus
                 Select::make('status')
                     ->label('Status')
                     ->options([

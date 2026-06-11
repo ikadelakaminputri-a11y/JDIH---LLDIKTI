@@ -8,12 +8,13 @@ new class extends Component {
     public bool $loading = true;
     public string $viewerMode = 'preview';
 
-    public function mount(int $id): void
+    public function mount(string $slug): void
     {
         $this->peraturan = Peraturan::with(['category', 'activeVersion', 'outgoingRelations.targetRegulation.category', 'incomingRelations.sourceRegulation.category'])
-            ->where('id', $id)
+            ->where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();
+
         $this->loading = false;
     }
 
@@ -35,7 +36,7 @@ new class extends Component {
 
 <div class="bg-gray-50 min-h-screen">
     {{-- ===== HERO HEADER ===== --}}
-    <div class="relative bg-[#185FA5] h-[20vh] lg:h-[25vh] min-h-37.5 flex items-end overflow-hidden">
+    <div class="relative bg-[#185FA5] h-[20vh] lg:h-[25vh] min-h-43 flex items-end overflow-hidden">
         <div class="absolute inset-0 bg-linear-to-br from-[#0a2d52] via-[#185FA5] to-[#1e7abf]"></div>
         <div class="absolute inset-0 opacity-10"
             style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px); background-size: 40px 40px;">
@@ -233,16 +234,21 @@ new class extends Component {
 
                 {{-- ===== KANAN: INFORMASI + STATUS ===== --}}
                 <div class="order-1 lg:order-2 col-span-1 lg:col-span-2 space-y-3">
-
                     {{-- Informasi Dokumen --}}
                     <div class="bg-white border border-gray-200 rounded-sm p-4">
-                        <div class="text-lg font-medium text-gray-800 mb-3.5 flex items-center gap-1.5 uppercase border-b border-gray-300 pb-4">
+                        <div
+                            class="text-lg font-medium text-gray-800 mb-3.5 flex items-center gap-1.5 uppercase border-b border-gray-300 pb-4">
                             <i class="ti ti-info-circle text-[#0A2647] hidden sm:block"></i>
                             Informasi <span class="text-gray-500">Peraturan</span>
                         </div>
 
                         @php
                             $metaItems = [
+                                [
+                                    'icon' => 'ti-file-description',
+                                    'label' => 'Judul Peraturan',
+                                    'value' => $peraturan->title,
+                                ],
                                 [
                                     'icon' => 'ti-file-text',
                                     'label' => 'Jenis Dokumen',
@@ -251,8 +257,8 @@ new class extends Component {
                                 ['icon' => 'ti-hash', 'label' => 'Nomor', 'value' => $peraturan->number],
                                 [
                                     'icon' => 'ti-calendar',
-                                    'label' => 'Tanggal Terbit',
-                                    'value' => $peraturan->publish_date->translatedFormat('d F Y'),
+                                    'label' => 'Tanggal Diunggah',
+                                    'value' => $peraturan->created_at->translatedFormat('d F Y'),
                                 ],
                                 [
                                     'icon' => 'ti-download',
@@ -270,7 +276,8 @@ new class extends Component {
                         <div class="divide-y divide-gray-100">
                             @foreach ($metaItems as $item)
                                 <div class="flex items-start gap-2.5 py-2.5">
-                                    <i class="ti {{ $item['icon'] }} text-gray-400 text-xl mt-0.5 shrink-0 hidden sm:block"></i>
+                                    <i
+                                        class="ti {{ $item['icon'] }} text-gray-400 text-xl mt-0.5 shrink-0 hidden sm:block"></i>
                                     <div>
                                         <div class="text-sm text-gray-400 font-medium">{{ $item['label'] }}</div>
                                         <div class="text-sm  text-[#0A2647] mt-0.5">{{ $item['value'] }}
@@ -290,7 +297,8 @@ new class extends Component {
 
                     @if ($adaRelasi)
                         <div class="bg-white border border-gray-200 rounded-sm p-4">
-                            <div class="text-lg uppercase font-medium text-gray-800 mb-3.5 flex items-center gap-1.5 border-b border-gray-300 pb-4">
+                            <div
+                                class="text-lg uppercase font-medium text-gray-800 mb-3.5 flex items-center gap-1.5 border-b border-gray-300 pb-4">
                                 <i class="ti ti-git-branch text-gray-400 hidden sm:block"></i>
                                 Status <span class="text-gray-500">Peraturan</span>
                             </div>
@@ -308,12 +316,12 @@ new class extends Component {
                                         </div>
                                         <div class="px-3 space-y-2.5">
                                             @foreach ($items as $relasi)
-                                                <div class="flex items-center gap-2">
+                                                <div class="flex items-start gap-2">
                                                     <span class="text-sm text-gray-500 shrink-0 mt-0.5">
                                                         {{ chr(96 + $loop->index + 1) }}.
                                                     </span>
                                                     <div class="text-sm leading-snug">
-                                                        <a href="{{ route('portal.detail', $relasi->targetRegulation->id) }}"
+                                                        <a href="{{ route('portal.detail', $relasi->targetRegulation->slug) }}"
                                                             class="hover:underline capitalize text-red-400">
                                                             {{ $relasi->targetRegulation->title }}
                                                             No. {{ $relasi->targetRegulation->number }} Tahun
@@ -338,14 +346,13 @@ new class extends Component {
                                         </div>
                                         <div class="px-3 space-y-2.5">
                                             @foreach ($items as $relasi)
-                                                <div class="flex items-center gap-2">
+                                                <div class="flex items-start gap-2">
                                                     <span class="text-sm text-gray-500 shrink-0 mt-0.5">
                                                         {{ chr(96 + $loop->index + 1) }}.
                                                     </span>
                                                     <div class="text-sm leading-snug">
-                                                        <a href="{{ route('portal.detail', $relasi->sourceRegulation->id) }}"
-                                                            style="color: #dc2626;"
-                                                            class="hover:underline font-medium">
+                                                        <a href="{{ route('portal.detail', $relasi->sourceRegulation->slug) }}"
+                                                            class="hover:underline text-red-400">
                                                             {{ $relasi->sourceRegulation->title }}
                                                             Nomor {{ $relasi->sourceRegulation->number }} Tahun
                                                             {{ $relasi->sourceRegulation->year }}
