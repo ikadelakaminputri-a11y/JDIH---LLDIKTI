@@ -30,6 +30,7 @@ class OutgoingRelationsRelationManager extends RelationManager
                             ->get()
                             ->mapWithKeys(fn($r) => [$r->id => "{$r->number} — {$r->title}"])
                     )
+                    ->placeholder('Pilih Peraturan Tujuan')
                     ->searchable()
                     ->required(),
                 Select::make('relation_type')
@@ -39,6 +40,7 @@ class OutgoingRelationsRelationManager extends RelationManager
                         'mencabut'        => 'Mencabut',
                         'dicabut_sebagian' => 'Mencabut Sebagian',
                     ])
+                    ->placeholder('Pilih Tipe Relasi')
                     ->required(),
             ]);
     }

@@ -35,17 +35,17 @@
                         JDIH LLDIKTI
                     </div>
                     <div class="text-[11px] text-white/65">
-                        Wilayah XI Kalimantan
+                        Wilayah XI Kalimantan Selatan
                     </div>
                 </div>
             </a>
 
             {{-- Tombol Login --}}
-            {{-- <a href=""
+            <a href="/admin/login"
                 class="flex items-center gap-1.5 bg-white/15 border border-white/30 rounded-lg px-4 py-2 text-white text-sm hover:bg-white/25 transition-colors duration-150">
                 <i class="ti ti-lock text-base"></i>
                 Login
-            </a> --}}
+            </a>
         </div>
     </div>
 </header>

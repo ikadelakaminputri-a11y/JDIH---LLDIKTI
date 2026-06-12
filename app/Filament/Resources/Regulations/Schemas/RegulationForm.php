@@ -17,6 +17,7 @@ class RegulationForm
                 Select::make('category_id')
                     ->label('Kategori')
                     ->relationship('category', 'name')
+                    ->placeholder('Pilih kategori')
                     ->required(),
                 TextInput::make('title')
                     ->label('Judul')
@@ -41,6 +42,7 @@ class RegulationForm
                         'published'   => 'Published',
                         'unpublished' => 'Unpublished',
                     ])
+                    ->placeholder('Pilih Status')
                     ->default('unpublished')
                     ->required(),
                 FileUpload::make('pdf_file')
