@@ -1,3 +1,5 @@
+SET FOREIGN_KEY_CHECKS=0;
+
 INSERT IGNORE INTO `categories` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
 (1, 'Undang-Undang', 'undang-undang', '2026-06-17 17:24:54', '2026-06-17 17:24:54'),
 (2, 'Peraturan pemerintah pengganti undang-undang', 'peraturan-pemerintah-pengganti-undang-undang', '2026-06-17 17:24:54', '2026-06-22 16:37:22'),
@@ -289,3 +291,6 @@ INSERT IGNORE INTO `regulation_versions` (`id`, `regulation_id`, `version_number
 
 INSERT IGNORE INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Admini LLDIKTI XI', 'admin@lldikti.test', NULL, '$2y$12$MJsxIXdY9qqId5pLbTl9EeVrjhA/PIl24/jRgfuJeOX06JnzErXFW', 'y9eEgND8Slgxx4b1s4Zj5p97GX3TqkCAIXwfAAL0EXcc8waTiFjo5SSu7RCt', '2026-06-17 17:17:41', '2026-06-17 17:17:41');
+
+
+SET FOREIGN_KEY_CHECKS=1;
