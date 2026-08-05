@@ -46,13 +46,14 @@ class RegulationForm
                     ->default('unpublished')
                     ->required(),
                 FileUpload::make('pdf_file')
-                    ->label('File PDF (Versi 1)')
-                    ->disk('public')
-                    ->directory('regulations')
-                    ->acceptedFileTypes(['application/pdf'])
-                    ->required()
-                    ->columnSpanFull()
-                    ->visibleOn('create'),
+    ->label('File PDF (Versi 1)')
+    ->disk('public')
+    ->directory('regulations')
+    ->acceptedFileTypes(['application/pdf'])
+    ->maxSize(20480) // 20 MB
+    ->required()
+    ->columnSpanFull()
+    ->visibleOn('create'),
             ]);
     }
 }

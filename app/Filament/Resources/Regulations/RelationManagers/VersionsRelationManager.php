@@ -30,11 +30,12 @@ class VersionsRelationManager extends RelationManager
         return $schema
             ->components([
                 FileUpload::make('file_path')
-                    ->label('File PDF')
-                    ->disk('public')
-                    ->directory('regulations')
-                    ->acceptedFileTypes(['application/pdf'])
-                    ->required()
+    ->label('File PDF')
+    ->disk('public')
+    ->directory('regulations')
+    ->acceptedFileTypes(['application/pdf'])
+    ->maxSize(20480)
+    ->required()
                     ->columnSpanFull(),
                 Textarea::make('notes')
                     ->label('Catatan (opsional)')
