@@ -32,5 +32,5 @@ RUN npm install && npm run build
 
 EXPOSE 8000
 
-# Start command
-CMD ["sh", "-c", "php artisan storage:link --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+# Start command without route:cache (to avoid closure route serialization crash)
+CMD ["sh", "-c", "php artisan storage:link --force && php artisan config:clear && php artisan view:clear && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
