@@ -53,7 +53,7 @@ new class extends Component {
             $query->where('year', $this->tahun);
         }
 
-        return $query->latest('publish_date');
+        return $query->latest('created_at');
     }
 
     public function getPeraturanProperty()
