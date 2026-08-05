@@ -1,9 +1,9 @@
 [variables]
-NIXPACKS_PHP_EXTENSIONS = "intl, zip, gd, pdo_mysql, mbstring, openssl"
+NIXPACKS_PHP_EXTENSIONS = "intl zip gd pdo_mysql mbstring openssl"
 
 [phases.build]
 cmds = [
-  "composer install --ignore-platform-reqs --no-dev --optimize-autoloader",
+  "composer install --optimize-autoloader --no-scripts --no-interaction",
   "npm install",
   "npm run build"
 ]

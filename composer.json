@@ -80,6 +80,11 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "platform-check": false,
+        "platform": {
+            "php": "8.3.33",
+            "ext-intl": "8.3.33",
+            "ext-zip": "1.22.0"
+        },
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
