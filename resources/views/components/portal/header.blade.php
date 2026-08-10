@@ -40,12 +40,23 @@
                 </div>
             </a>
 
-            {{-- Tombol Login --}}
-            <a href="/admin/login"
-                class="flex items-center gap-1.5 bg-white/15 border border-white/30 rounded-lg px-4 py-2 text-white text-sm hover:bg-white/25 transition-colors duration-150">
-                <i class="ti ti-lock text-base"></i>
-                Login
-            </a>
+            <div class="flex items-center gap-3">
+                {{-- Badge Demo --}}
+                <span class="inline-flex items-center gap-1.5 bg-amber-500/20 border border-amber-500/30 text-amber-300 text-[11px] sm:text-xs px-2.5 py-1 rounded-full font-medium shadow-sm">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                    </span>
+                    Demo Admin
+                </span>
+
+                {{-- Tombol Login --}}
+                <a href="/admin/login"
+                    class="flex items-center gap-1.5 bg-white/15 border border-white/30 rounded-lg px-4 py-2 text-white text-sm hover:bg-white/25 transition-colors duration-150">
+                    <i class="ti ti-lock text-base"></i>
+                    Login
+                </a>
+            </div>
         </div>
     </div>
 </header>

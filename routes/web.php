@@ -7,10 +7,6 @@ Route::get('/', function () {
     return view('portal.index');
 });
 
-Route::get('/docs', function () {
-    return response()->file(public_path('docs.html'));
-});
-
 /*
 |--------------------------------------------------------------------------
 | Portal Publik — JDIH LLDIKTI Wilayah XI

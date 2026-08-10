@@ -28,6 +28,10 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('JDIH LLDIKTI Wilayah XI')
             ->globalSearch(false)
             ->login()
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
+                fn (): \Illuminate\Contracts\View\View => view('filament.pages.auth.demo-credentials'),
+            )
             ->colors([
                 'primary' => Color::hex('#0c3d6e'),
             ])

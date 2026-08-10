@@ -54,9 +54,19 @@ new class extends Component {
                         class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-2 sm:mb-3 leading-tight">
                         JARINGAN DOKUMENTASI & INFORMASI HUKUM
                     </h1>
-                    <p class="text-white/80 text-sm sm:text-base md:text-lg">
+                    <p class="text-white/80 text-sm sm:text-base md:text-lg mb-6">
                         Lembaga Layanan Pendidikan Tinggi Wilayah XI Kalimantan
                     </p>
+                    <div class="flex flex-wrap justify-center gap-3.5">
+                        <a href="/admin/login" class="inline-flex items-center gap-2 bg-[#0c3d6e] hover:bg-[#093057] border border-[#0c3d6e] text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 no-underline">
+                            <i class="ti ti-device-desktop text-base"></i>
+                            Coba Demo Admin
+                        </a>
+                        <a href="#cari-peraturan" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg backdrop-blur-sm transition-all duration-200 transform hover:-translate-y-0.5 no-underline">
+                            <i class="ti ti-search text-base"></i>
+                            Cari Peraturan
+                        </a>
+                    </div>
                 </div>
             </div>
 

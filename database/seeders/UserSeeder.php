@@ -20,5 +20,13 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('admin123'),
             ]
         );
+
+        User::firstOrCreate(
+            ['email' => 'demo@lldikti.go.id'],
+            [
+                'name'     => 'Demo User',
+                'password' => Hash::make('password'),
+            ]
+        );
     }
 }

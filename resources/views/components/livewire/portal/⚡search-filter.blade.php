@@ -40,7 +40,7 @@ new class extends Component {
 };
 ?>
 
-<div class="px-4 sm:px-6 py-6 max-w-5xl mx-auto w-full">
+<div id="cari-peraturan" class="px-4 sm:px-6 py-6 max-w-5xl mx-auto w-full">
     <div class="border border-gray-200 rounded-xl overflow-hidden">
 
         {{-- Search --}}
